@@ -1,61 +1,82 @@
 name: Multi Environment Deployment
 
+ 
+
 on:
- push:
-   branches:
-     - dev
-     - staging
- workflow_dispatch:
+  push:
+    branches:
+      - dev
+      - staging
+  workflow_dispatch:
+
+ 
 
 jobs:
 
- deploy:
-   runs-on: ubuntu-latest
+ 
 
-   steps:
-     - name: Checkout Code
-       uses: actions/checkout@v3
+  deploy:
+    runs-on: ubuntu-latest
 
-     - name: Setup Node.js
-       uses: actions/setup-node@v3
-       with:
-         node-version: '18'
+ 
 
-     - name: Install Dependencies
-       run: npm install
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-     - name: Run Tests
-       run: npm test
+ 
 
-     # -----------------------------
-     # DEV DEPLOYMENT
-     # -----------------------------
-     - name: Deploy to Dev
-       if: github.ref == 'refs/heads/dev'
-       env:
-         API_URL: ${{ secrets.DEV_API_URL }}
-       run: |
-         echo "Deploying to DEV environment"
-         echo "API URL: $API_URL"
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-     # -----------------------------
-     # STAGING DEPLOYMENT
-     # -----------------------------
-     - name: Deploy to Staging
-       if: github.ref == 'refs/heads/staging'
-       env:
-         API_URL: ${{ secrets.STAGING_API_URL }}
-       run: |
-         echo "Deploying to STAGING environment"
-         echo "API URL: $API_URL"
+ 
 
-     # -----------------------------
-     # PRODUCTION DEPLOYMENT
-     # -----------------------------
-     - name: Deploy to Production
-       if: github.event_name == 'workflow_dispatch'
-       env:
-         API_URL: ${{ secrets.PROD_API_URL }}
-       run: |
-         echo "Deploying to PRODUCTION"
-         echo "API URL: $API_URL"
+      - name: Install Dependencies
+        run: npm install
+
+ 
+
+      - name: Run Tests
+        run: npm test
+
+ 
+
+      # -----------------------------
+      # DEV DEPLOYMENT
+      # -----------------------------
+      - name: Deploy to Dev
+        if: github.ref == 'refs/heads/dev'
+        env:
+          API_URL: ${{ secrets.DEV_API_URL }}
+        run: |
+          echo "Deploying to DEV environment"
+          echo "API URL: $API_URL"
+
+ 
+
+      # -----------------------------
+      # STAGING DEPLOYMENT
+      # -----------------------------
+      - name: Deploy to Staging
+        if: github.ref == 'refs/heads/staging'
+        env:
+          API_URL: ${{ secrets.STAGING_API_URL }}
+        run: |
+          echo "Deploying to STAGING environment"
+          echo "API URL: $API_URL"
+
+ 
+
+      # -----------------------------
+      # PRODUCTION DEPLOYMENT
+      # -----------------------------
+      - name: Deploy to Production
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          API_URL: ${{ secrets.PROD_API_URL }}
+        run: |
+          echo "Deploying to PRODUCTION"
+          echo "API URL: $API_URL"
+
